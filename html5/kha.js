@@ -1536,8 +1536,11 @@ kha__$Assets_SoundList.prototype = {
 	,__class__: kha__$Assets_SoundList
 };
 var kha__$Assets_BlobList = function() {
-	this.names = ["index_html"];
-	this.index_htmlDescription = { name : "index_html", file_sizes : [225], files : ["index.html"], type : "blob"};
+	this.names = ["index_html","manifest_json"];
+	this.manifest_jsonDescription = { name : "manifest_json", file_sizes : [72], files : ["manifest.json"], type : "blob"};
+	this.manifest_jsonName = "manifest_json";
+	this.manifest_json = null;
+	this.index_htmlDescription = { name : "index_html", file_sizes : [269], files : ["index.html"], type : "blob"};
 	this.index_htmlName = "index_html";
 	this.index_html = null;
 };
@@ -1558,6 +1561,18 @@ kha__$Assets_BlobList.prototype = {
 	,index_htmlUnload: function() {
 		this.index_html.unload();
 		this.index_html = null;
+	}
+	,manifest_json: null
+	,manifest_jsonName: null
+	,manifest_jsonDescription: null
+	,manifest_jsonLoad: function(done,failure) {
+		kha_Assets.loadBlob("manifest_json",function(blob) {
+			done();
+		},failure,{ fileName : "kha/internal/AssetsBuilder.hx", lineNumber : 134, className : "kha._Assets.BlobList", methodName : "manifest_jsonLoad"});
+	}
+	,manifest_jsonUnload: function() {
+		this.manifest_json.unload();
+		this.manifest_json = null;
 	}
 	,names: null
 	,__class__: kha__$Assets_BlobList

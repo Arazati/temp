@@ -6,7 +6,17 @@
 				"index.html"
 			],
 			"file_sizes": [
-				225
+				269
+			],
+			"type": "blob"
+		},
+		{
+			"name": "manifest_json",
+			"files": [
+				"manifest.json"
+			],
+			"file_sizes": [
+				72
 			],
 			"type": "blob"
 		},
