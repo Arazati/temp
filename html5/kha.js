@@ -137,6 +137,7 @@ Main.setFullWindowCanvas = function() {
 	window.document.documentElement.style.margin = "0";
 	window.document.body.style.padding = "0";
 	window.document.body.style.margin = "0";
+	window.document.body.style.height = Std.string(window.innerHeight + 50) + "";
 	var canvas = window.document.getElementById("khanvas");
 	canvas.style.display = "block";
 	var resize = function() {
@@ -1540,7 +1541,7 @@ var kha__$Assets_BlobList = function() {
 	this.manifest_jsonDescription = { name : "manifest_json", file_sizes : [72], files : ["manifest.json"], type : "blob"};
 	this.manifest_jsonName = "manifest_json";
 	this.manifest_json = null;
-	this.index_htmlDescription = { name : "index_html", file_sizes : [269], files : ["index.html"], type : "blob"};
+	this.index_htmlDescription = { name : "index_html", file_sizes : [501], files : ["index.html"], type : "blob"};
 	this.index_htmlName = "index_html";
 	this.index_html = null;
 };
