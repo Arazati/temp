@@ -104,18 +104,106 @@ Lambda.array = function(it) {
 	}
 	return a;
 };
+var kha_math_Vector2 = function(x,y) {
+	if(y == null) {
+		y = 0;
+	}
+	if(x == null) {
+		x = 0;
+	}
+	this.x = x;
+	this.y = y;
+};
+$hxClasses["kha.math.Vector2"] = kha_math_Vector2;
+kha_math_Vector2.__name__ = true;
+kha_math_Vector2.prototype = {
+	x: null
+	,y: null
+	,get_length: function() {
+		return Math.sqrt(this.x * this.x + this.y * this.y);
+	}
+	,set_length: function(length) {
+		var currentLength = Math.sqrt(this.x * this.x + this.y * this.y);
+		if(currentLength == 0) {
+			return 0;
+		}
+		var mul = length / currentLength;
+		this.x *= mul;
+		this.y *= mul;
+		return length;
+	}
+	,__class__: kha_math_Vector2
+};
 var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = true;
+Main.init = function() {
+	kha_input_Mouse.get().notify(Main.click,null,null,null,null);
+};
 Main.update = function() {
+	if(!Main.firstInit) {
+		Main.firstInit = true;
+		Main.init();
+	}
+	var dt = Main.elapsedTime();
+	var _this = Main.desiredPos;
+	var vec = Main.curPos;
+	var x = _this.x - vec.x;
+	var y = _this.y - vec.y;
+	if(y == null) {
+		y = 0;
+	}
+	if(x == null) {
+		x = 0;
+	}
+	var movement_x = x;
+	var movement_y = y;
+	if(Math.sqrt(movement_x * movement_x + movement_y * movement_y) > 1) {
+		var moveDistance = Main.speed * dt;
+		if(moveDistance > Math.sqrt(movement_x * movement_x + movement_y * movement_y)) {
+			moveDistance = Math.sqrt(movement_x * movement_x + movement_y * movement_y);
+		}
+		var _this1 = Main.curPos;
+		var x1 = movement_x;
+		var y1 = movement_y;
+		if(y1 == null) {
+			y1 = 0;
+		}
+		if(x1 == null) {
+			x1 = 0;
+		}
+		var _this_x = x1;
+		var _this_y = y1;
+		var currentLength = Math.sqrt(_this_x * _this_x + _this_y * _this_y);
+		if(currentLength != 0) {
+			var mul = 1 / currentLength;
+			_this_x *= mul;
+			_this_y *= mul;
+		}
+		var x2 = _this_x * moveDistance;
+		var y2 = _this_y * moveDistance;
+		if(y2 == null) {
+			y2 = 0;
+		}
+		if(x2 == null) {
+			x2 = 0;
+		}
+		var vec_x = x2;
+		var vec_y = y2;
+		Main.curPos = new kha_math_Vector2(_this1.x + vec_x,_this1.y + vec_y);
+	}
+};
+Main.click = function(button,x,y) {
+	Main.desiredPos = new kha_math_Vector2(x,y);
+	haxe_Log.trace("Clicked at " + x + ", " + y + " - button:" + button,{ fileName : "Main.hx", lineNumber : 41, className : "Main", methodName : "click"});
 };
 Main.render = function(frames) {
 	var fb = frames[0];
 	var g2 = fb.get_g2();
-	g2.begin(true,-8388480);
-	g2.pushTranslation(64,64);
+	g2.begin(true,kha__$Color_Color_$Impl_$.fromBytes(200,200,200));
+	g2.pushTranslation(0,0);
 	g2.set_color(-65536);
-	g2.fillRect(0,0,64,64);
+	g2.fillRect(Main.curPos.x - 32,Main.curPos.y - 32,64,64);
 	g2.popTransformation();
 	g2.end();
 };
@@ -148,6 +236,15 @@ Main.setFullWindowCanvas = function() {
 	};
 	window.onresize = resize;
 	resize();
+};
+Main.elapsedTime = function() {
+	var time = kha_Scheduler.time();
+	if(Main.lastTime < 0) {
+		Main.lastTime = time;
+	}
+	var dt = time - Main.lastTime;
+	Main.lastTime = time;
+	return dt;
 };
 Math.__name__ = true;
 var Reflect = function() { };
@@ -21784,36 +21881,6 @@ kha_math_Quaternion.prototype = {
 	}
 	,__class__: kha_math_Quaternion
 };
-var kha_math_Vector2 = function(x,y) {
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	this.x = x;
-	this.y = y;
-};
-$hxClasses["kha.math.Vector2"] = kha_math_Vector2;
-kha_math_Vector2.__name__ = true;
-kha_math_Vector2.prototype = {
-	x: null
-	,y: null
-	,get_length: function() {
-		return Math.sqrt(this.x * this.x + this.y * this.y);
-	}
-	,set_length: function(length) {
-		var currentLength = Math.sqrt(this.x * this.x + this.y * this.y);
-		if(currentLength == 0) {
-			return 0;
-		}
-		var mul = length / currentLength;
-		this.x *= mul;
-		this.y *= mul;
-		return length;
-	}
-	,__class__: kha_math_Vector2
-};
 var kha_math_Vector3 = function(x,y,z) {
 	if(z == null) {
 		z = 0;
@@ -22415,6 +22482,11 @@ js_Boot.__toStr = ({ }).toString;
 if(ArrayBuffer.prototype.slice == null) {
 	ArrayBuffer.prototype.slice = js_lib__$ArrayBuffer_ArrayBufferCompat.sliceImpl;
 }
+Main.curPos = new kha_math_Vector2(300,200);
+Main.desiredPos = new kha_math_Vector2(300,200);
+Main.speed = 400.0;
+Main.firstInit = false;
+Main.lastTime = -1.0;
 haxe_Unserializer.DEFAULT_RESOLVER = new haxe__$Unserializer_DefaultResolver();
 haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 haxe_crypto_Base64.CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
